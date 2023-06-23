@@ -74,6 +74,10 @@ export class AwsSrpClient {
     return bigA;
   }
 
+  /**
+   * 
+   * @returns The generated SRP_A value for an InitiateAuth request.
+   */
   public GetSrpA(): string {
     return HashUtils.LongToHex(this.LargeAValue);
   }
@@ -95,6 +99,12 @@ export class AwsSrpClient {
     );
   }
 
+  /**
+   * Generate a response for an AuthChallenge.
+   * @param password The user password
+   * @param challengeParams The response from an InitiateAuth request
+   * @returns A Password Verifier challenge response
+   */
   public ProcessChallenge(password: string, challengeParams: PasswordVerifierChallengeParams): ChallengeResponse {
     const timestamp = moment.utc().format('ddd MMM D HH:mm:ss UTC yyyy');
     const hkdf = this.GetPasswordAuthenticationKey(
@@ -120,6 +130,15 @@ export class AwsSrpClient {
     };
   }
 
+  /**
+   * Authenticate a user via their password.
+   * 
+   * This method also re-initializes the SmallA and LargeA values.
+   * 
+   * @param username Cognito Username
+   * @param password Cognito Password
+   * @returns An object with Id-/Access-/Refresh tokens on success, an error object on failure
+   */
   public async AuthenticateUser(username: string, password: string): Promise<AuthResult | undefined> {
     try {
       this.Initialize();

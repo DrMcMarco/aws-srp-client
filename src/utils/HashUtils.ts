@@ -4,6 +4,11 @@ import bigInt, { BigInteger } from 'big-integer';
 class HashUtils {
   private static INFO_BITS: CryptoJS.lib.WordArray = CryptoJS.enc.Utf8.parse('Caldera Derived Key');
 
+  /**
+   * Creates a SHA256 hash out of a WordArray.
+   * @param buf CryptoJS WordArray to hash
+   * @returns SHA256-encrypted hash, padded to a length of 64
+   */
   public static HashSha256(buf: CryptoJS.lib.WordArray): string {
     const a: string = CryptoJS.SHA256(buf).toString(CryptoJS.enc.Hex);
     return a.padStart(64, '0');
@@ -21,12 +26,22 @@ class HashUtils {
     return longValue.toString(16);
   }
 
+  /**
+   * Creates a random BigInteger of a given size.
+   * @param size Number of random bytes
+   * @returns Random BigInteger
+   */
   public static GetRandom(size: number): BigInteger {
     const randomBytes = CryptoJS.lib.WordArray.random(size);
     const randomHex = CryptoJS.enc.Hex.stringify(randomBytes);
     return this.HexToLong(randomHex);
   }
 
+  /**
+   * Add padding to ensure a valid hex string.
+   * @param hex Either a hex string or a BigInteger that get converted to a hex string
+   * @returns A padded hex string
+   */
   public static PadHex(hex: string | BigInteger): string {
     let hashStr = '';
 
@@ -39,6 +54,12 @@ class HashUtils {
     return hashStr;
   }
 
+  /**
+   * Creates a 16 byte HMAC derived key.
+   * @param ikm Input key material
+   * @param salt Salt from the server challenge response
+   * @returns 16 byte HMAC derived key
+   */
   public static ComputeHdkf(ikm: CryptoJS.lib.WordArray, salt: CryptoJS.lib.WordArray): CryptoJS.lib.WordArray {
     const prk = CryptoJS.HmacSHA256(ikm, salt);
 
@@ -68,6 +89,8 @@ class HashUtils {
 
     return CryptoJS.lib.WordArray.create(wa, ba.length);
   }
+
+  // Following function where only used for debugging to check if the generated WordArray is equal to the byte array used in other implementations
 
   private static WordToByteArray(word: number, length: number): number[] {
     const ba: number[] = [];
