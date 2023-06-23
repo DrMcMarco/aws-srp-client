@@ -75,7 +75,7 @@ export class AwsSrpClient {
   }
 
   /**
-   * 
+   *
    * @returns The generated SRP_A value for an InitiateAuth request.
    */
   public GetSrpA(): string {
@@ -132,9 +132,9 @@ export class AwsSrpClient {
 
   /**
    * Authenticate a user via their password.
-   * 
+   *
    * This method also re-initializes the SmallA and LargeA values.
-   * 
+   *
    * @param username Cognito Username
    * @param password Cognito Password
    * @returns An object with Id-/Access-/Refresh tokens on success, an error object on failure
