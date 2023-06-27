@@ -65,7 +65,8 @@ class HashUtils {
 
     const updateByteArray = [1];
     const updateWordArray = this.ByteArrayToWordArray(updateByteArray);
-    const infoBitsUpdate = this.INFO_BITS.concat(updateWordArray);
+    const infoBits = this.INFO_BITS.clone();
+    const infoBitsUpdate = infoBits.concat(updateWordArray);
 
     const hash = CryptoJS.HmacSHA256(infoBitsUpdate, prk);
     hash.sigBytes = 16;
