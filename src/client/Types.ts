@@ -1,13 +1,13 @@
 interface InitiateAuthParams {
   USERNAME: string;
   SRP_A: string;
-};
+}
 
 interface InitiateAuthRequest {
   AuthParameters: InitiateAuthParams;
   AuthFlow: string;
   ClientId: string;
-};
+}
 
 interface PasswordVerifierChallengeParams {
   SALT: string;
@@ -15,12 +15,12 @@ interface PasswordVerifierChallengeParams {
   USER_ID_FOR_SRP: string;
   USERNAME: string;
   SRP_B: string;
-};
+}
 
 interface InitiateAuthResponse {
   ChallengeName: string;
   ChallengeParameters: PasswordVerifierChallengeParams;
-};
+}
 
 interface ChallengeResponse {
   USERNAME: string;
@@ -30,7 +30,7 @@ interface PasswordVerifierChallengeResponse extends ChallengeResponse {
   TIMESTAMP?: string;
   PASSWORD_CLAIM_SECRET_BLOCK?: string;
   PASSWORD_CLAIM_SIGNATURE?: string;
-};
+}
 
 interface NewPasswordChallengeReponse extends ChallengeResponse {
   NEW_PASSWORD: string;
@@ -42,7 +42,7 @@ interface RespondToAuthChallengeRequest {
   ChallengeName: string;
   ChallengeResponses: ChallengeResponse;
   Session?: string;
-};
+}
 
 interface PasswordVerifierResult {
   Success: boolean;
@@ -57,7 +57,7 @@ interface PasswordVerifierResult {
   };
   ChallengeParameters?: any;
   Error?: any;
-};
+}
 
 export {
   InitiateAuthParams,
@@ -68,5 +68,5 @@ export {
   ChallengeResponse,
   PasswordVerifierResult,
   PasswordVerifierChallengeResponse,
-  NewPasswordChallengeReponse
+  NewPasswordChallengeReponse,
 };

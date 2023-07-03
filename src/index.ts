@@ -9,7 +9,7 @@ import {
   PasswordVerifierChallengeParams,
   PasswordVerifierResult,
   NewPasswordChallengeReponse,
-  PasswordVerifierChallengeResponse
+  PasswordVerifierChallengeResponse,
 } from './client/Types';
 
 export {
@@ -23,7 +23,7 @@ export {
   PasswordVerifierChallengeParams,
   PasswordVerifierResult,
   NewPasswordChallengeReponse,
-  PasswordVerifierChallengeResponse
+  PasswordVerifierChallengeResponse,
 };
 
 // const client = new AwsSrpClient('region', 'pool-id', 'client-id');

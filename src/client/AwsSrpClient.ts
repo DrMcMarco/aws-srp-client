@@ -106,7 +106,10 @@ export class AwsSrpClient {
    * @param challengeParams The response from an InitiateAuth request
    * @returns A Password Verifier challenge response
    */
-  public ProcessChallenge(password: string, challengeParams: PasswordVerifierChallengeParams): PasswordVerifierChallengeResponse {
+  public ProcessChallenge(
+    password: string,
+    challengeParams: PasswordVerifierChallengeParams,
+  ): PasswordVerifierChallengeResponse {
     const timestamp = moment.utc().format('ddd MMM D HH:mm:ss UTC yyyy');
     const hkdf = this.GetPasswordAuthenticationKey(
       challengeParams.USER_ID_FOR_SRP,
@@ -188,14 +191,17 @@ export class AwsSrpClient {
           if (authChallengeResponse) {
             const verifierResult: PasswordVerifierResult = {
               Success: false,
-              NewPasswordRequired: false
+              NewPasswordRequired: false,
             };
 
             if (authChallengeResponse.data.AuthenticationResult) {
               verifierResult.Success = true;
               verifierResult.AuthenticationResult = authChallengeResponse.data.AuthenticationResult;
               verifierResult.ChallengeParameters = authChallengeResponse.data.ChallengeParameters;
-            } else if (authChallengeResponse.data.ChallengeName && authChallengeResponse.data.ChallengeName === 'NEW_PASSWORD_REQUIRED') {
+            } else if (
+              authChallengeResponse.data.ChallengeName &&
+              authChallengeResponse.data.ChallengeName === 'NEW_PASSWORD_REQUIRED'
+            ) {
               verifierResult.Success = true;
               verifierResult.NewPasswordRequired = true;
               verifierResult.Session = authChallengeResponse.data.Session;
@@ -214,28 +220,31 @@ export class AwsSrpClient {
     }
   }
 
-  public async SetNewPassword(session: string, username: string, newPassword: string): Promise<PasswordVerifierResult | undefined> {
-
+  public async SetNewPassword(
+    session: string,
+    username: string,
+    newPassword: string,
+  ): Promise<PasswordVerifierResult | undefined> {
     const cognitoUrl = `https://cognito-idp.${this.Region}.amazonaws.com`;
 
     const newPasswordChallengeResponse: NewPasswordChallengeReponse = {
       USERNAME: username,
-      NEW_PASSWORD: newPassword
+      NEW_PASSWORD: newPassword,
     };
 
     const newPasswordChallengeRequest: RespondToAuthChallengeRequest = {
       ChallengeName: 'NEW_PASSWORD_REQUIRED',
       ClientId: this.ClientId,
       Session: session,
-      ChallengeResponses: newPasswordChallengeResponse
-    }
+      ChallengeResponses: newPasswordChallengeResponse,
+    };
 
     try {
       const newPasswordResponse = await axios.request({
         url: cognitoUrl,
         method: 'POST',
         headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': AmzTarget.AuthChallenge },
-        data: JSON.stringify(newPasswordChallengeRequest)
+        data: JSON.stringify(newPasswordChallengeRequest),
       });
 
       if (newPasswordResponse) {
@@ -243,15 +252,15 @@ export class AwsSrpClient {
           Success: true,
           NewPasswordRequired: false,
           AuthenticationResult: newPasswordResponse.data.AuthenticationResult,
-          ChallengeParameters: newPasswordResponse.data.ChallengeParameters
-        }
+          ChallengeParameters: newPasswordResponse.data.ChallengeParameters,
+        };
       }
     } catch (err) {
       return {
         Success: false,
         NewPasswordRequired: false,
-        Error: err
-      }
+        Error: err,
+      };
     }
   }
 }
