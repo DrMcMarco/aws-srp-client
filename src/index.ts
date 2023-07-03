@@ -1,25 +1,29 @@
 import { AwsSrpClient } from './client/AwsSrpClient';
 import { HashUtils } from './utils/HashUtils';
 import {
-  AuthParams,
-  AuthRequest,
-  AuthResponse,
-  ChallengeRequest,
+  InitiateAuthParams,
+  InitiateAuthRequest,
+  InitiateAuthResponse,
+  RespondToAuthChallengeRequest,
   ChallengeResponse,
   PasswordVerifierChallengeParams,
-  AuthResult,
+  PasswordVerifierResult,
+  NewPasswordChallengeReponse,
+  PasswordVerifierChallengeResponse
 } from './client/Types';
 
 export {
   AwsSrpClient,
   HashUtils,
-  AuthParams,
-  AuthRequest,
-  AuthResponse,
-  ChallengeRequest,
+  InitiateAuthParams,
+  InitiateAuthRequest,
+  InitiateAuthResponse,
+  RespondToAuthChallengeRequest,
   ChallengeResponse,
   PasswordVerifierChallengeParams,
-  AuthResult,
+  PasswordVerifierResult,
+  NewPasswordChallengeReponse,
+  PasswordVerifierChallengeResponse
 };
 
 // const client = new AwsSrpClient('region', 'pool-id', 'client-id');

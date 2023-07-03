@@ -1,15 +1,15 @@
-type AuthParams = {
+interface InitiateAuthParams {
   USERNAME: string;
   SRP_A: string;
 };
 
-type AuthRequest = {
-  AuthParameters: AuthParams;
+interface InitiateAuthRequest {
+  AuthParameters: InitiateAuthParams;
   AuthFlow: string;
   ClientId: string;
 };
 
-type PasswordVerifierChallengeParams = {
+interface PasswordVerifierChallengeParams {
   SALT: string;
   SECRET_BLOCK: string;
   USER_ID_FOR_SRP: string;
@@ -17,26 +17,37 @@ type PasswordVerifierChallengeParams = {
   SRP_B: string;
 };
 
-type AuthResponse = {
+interface InitiateAuthResponse {
   ChallengeName: string;
   ChallengeParameters: PasswordVerifierChallengeParams;
 };
 
-type ChallengeResponse = {
-  TIMESTAMP: string;
+interface ChallengeResponse {
   USERNAME: string;
-  PASSWORD_CLAIM_SECRET_BLOCK: string;
-  PASSWORD_CLAIM_SIGNATURE: string;
+}
+
+interface PasswordVerifierChallengeResponse extends ChallengeResponse {
+  TIMESTAMP?: string;
+  PASSWORD_CLAIM_SECRET_BLOCK?: string;
+  PASSWORD_CLAIM_SIGNATURE?: string;
 };
 
-type ChallengeRequest = {
+interface NewPasswordChallengeReponse extends ChallengeResponse {
+  NEW_PASSWORD: string;
+  SECRET_HASH?: string;
+}
+
+interface RespondToAuthChallengeRequest {
   ClientId: string;
   ChallengeName: string;
   ChallengeResponses: ChallengeResponse;
+  Session?: string;
 };
 
-type AuthResult = {
+interface PasswordVerifierResult {
   Success: boolean;
+  NewPasswordRequired: boolean;
+  Session?: string;
   AuthenticationResult?: {
     AccessToken: string;
     IdToken: string;
@@ -49,11 +60,13 @@ type AuthResult = {
 };
 
 export {
-  AuthParams,
-  AuthRequest,
+  InitiateAuthParams,
+  InitiateAuthRequest,
   PasswordVerifierChallengeParams,
-  AuthResponse,
-  ChallengeRequest,
+  InitiateAuthResponse,
+  RespondToAuthChallengeRequest,
   ChallengeResponse,
-  AuthResult,
+  PasswordVerifierResult,
+  PasswordVerifierChallengeResponse,
+  NewPasswordChallengeReponse
 };
