@@ -1,3 +1,9 @@
+enum AmzTarget {
+  InitiateAuth = 'AWSCognitoIdentityProviderService.InitiateAuth',
+  AuthChallenge = 'AWSCognitoIdentityProviderService.RespondToAuthChallenge',
+  ChangePassword = 'AWSCognitoIdentityProviderService.ChangePassword'
+}
+
 interface InitiateAuthParams {
   USERNAME: string;
   SRP_A: string;
@@ -59,7 +65,19 @@ interface PasswordVerifierResult {
   Error?: any;
 }
 
+interface ChangePasswordParams {
+  AccessToken: string;
+  PreviousPassword: string;
+  ProposedPassword: string;
+}
+
+interface ChangePasswordResponse {
+  StatusCode: number;
+  Error?: string;
+}
+
 export {
+  AmzTarget,
   InitiateAuthParams,
   InitiateAuthRequest,
   PasswordVerifierChallengeParams,
@@ -69,4 +87,6 @@ export {
   PasswordVerifierResult,
   PasswordVerifierChallengeResponse,
   NewPasswordChallengeReponse,
+  ChangePasswordParams,
+  ChangePasswordResponse
 };

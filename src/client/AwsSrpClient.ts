@@ -1,5 +1,6 @@
 import { HashUtils } from '../utils/HashUtils';
 import {
+  AmzTarget,
   InitiateAuthParams,
   PasswordVerifierChallengeParams,
   RespondToAuthChallengeRequest,
@@ -14,10 +15,7 @@ import bigInt, { BigInteger } from 'big-integer';
 import moment from 'moment';
 import axios from 'axios';
 
-enum AmzTarget {
-  InitiateAuth = 'AWSCognitoIdentityProviderService.InitiateAuth',
-  AuthChallenge = 'AWSCognitoIdentityProviderService.RespondToAuthChallenge',
-}
+
 
 export class AwsSrpClient {
   private static N_HEX: string =

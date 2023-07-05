@@ -1,6 +1,9 @@
 import { AwsSrpClient } from './client/AwsSrpClient';
 import { HashUtils } from './utils/HashUtils';
 import {
+  AmzTarget,
+  ChangePasswordParams,
+  ChangePasswordResponse,
   InitiateAuthParams,
   InitiateAuthRequest,
   InitiateAuthResponse,
@@ -15,6 +18,9 @@ import {
 export {
   AwsSrpClient,
   HashUtils,
+  AmzTarget,
+  ChangePasswordParams,
+  ChangePasswordResponse,
   InitiateAuthParams,
   InitiateAuthRequest,
   InitiateAuthResponse,
