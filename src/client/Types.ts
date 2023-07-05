@@ -1,7 +1,7 @@
 enum AmzTarget {
   InitiateAuth = 'AWSCognitoIdentityProviderService.InitiateAuth',
   AuthChallenge = 'AWSCognitoIdentityProviderService.RespondToAuthChallenge',
-  ChangePassword = 'AWSCognitoIdentityProviderService.ChangePassword'
+  ChangePassword = 'AWSCognitoIdentityProviderService.ChangePassword',
 }
 
 interface InitiateAuthParams {
@@ -88,5 +88,5 @@ export {
   PasswordVerifierChallengeResponse,
   NewPasswordChallengeReponse,
   ChangePasswordParams,
-  ChangePasswordResponse
+  ChangePasswordResponse,
 };

@@ -15,8 +15,6 @@ import bigInt, { BigInteger } from 'big-integer';
 import moment from 'moment';
 import axios from 'axios';
 
-
-
 export class AwsSrpClient {
   private static N_HEX: string =
     'FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1' +
