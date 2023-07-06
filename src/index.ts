@@ -1,4 +1,5 @@
 import { AwsSrpClient } from './client/AwsSrpClient';
+import { CognitoClient } from './client/CognitoClient';
 import { HashUtils } from './utils/HashUtils';
 import {
   AmzTarget,
@@ -17,6 +18,7 @@ import {
 
 export {
   AwsSrpClient,
+  CognitoClient,
   HashUtils,
   AmzTarget,
   ChangePasswordParams,
