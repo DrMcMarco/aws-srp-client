@@ -6,7 +6,7 @@ enum AmzTarget {
 
 enum AuthFlow {
   UserSrpAuth = 'USER_SRP_AUTH',
-  RefreshTokenAuth = 'REFRESH_TOKEN'
+  RefreshTokenAuth = 'REFRESH_TOKEN',
 }
 
 interface InitiateAuthParams {

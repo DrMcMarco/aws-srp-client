@@ -220,9 +220,9 @@ export class AwsSrpClient {
 
   /**
    * Authenticate a user via a refresh token.
-   * 
+   *
    * This method generates new Id-/Access-Token.
-   * 
+   *
    * @param refreshToken A valid refresh token
    * @returns An object with Id-/Access-/Refresh tokens on success, an error object on failure
    */
@@ -231,26 +231,26 @@ export class AwsSrpClient {
       const cognitoUrl = `https://cognito-idp.${this.Region}.amazonaws.com`;
 
       const authParams: RefreshTokenParams = {
-        REFRESH_TOKEN: refreshToken
-      }
+        REFRESH_TOKEN: refreshToken,
+      };
 
       const authRequest: InitiateAuthRequest = {
         AuthFlow: AuthFlow.RefreshTokenAuth,
         ClientId: this.ClientId,
-        AuthParameters: authParams
-      }
+        AuthParameters: authParams,
+      };
 
       const initAuthResponse = await axios.request({
         url: cognitoUrl,
         method: 'POST',
         headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': AmzTarget.InitiateAuth },
-        data: JSON.stringify(authRequest)
+        data: JSON.stringify(authRequest),
       });
 
       if (initAuthResponse) {
         const verifierResult: PasswordVerifierResult = {
           Success: false,
-          NewPasswordRequired: false
+          NewPasswordRequired: false,
         };
 
         if (initAuthResponse.data.AuthenticationResult) {
@@ -272,8 +272,8 @@ export class AwsSrpClient {
       return {
         Success: false,
         NewPasswordRequired: false,
-        Error: err
-      }
+        Error: err,
+      };
     }
   }
 
