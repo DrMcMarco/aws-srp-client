@@ -3,9 +3,11 @@ import { CognitoClient } from './client/CognitoClient';
 import { HashUtils } from './utils/HashUtils';
 import {
   AmzTarget,
+  AuthFlow,
   ChangePasswordParams,
   ChangePasswordResponse,
   InitiateAuthParams,
+  RefreshTokenParams,
   InitiateAuthRequest,
   InitiateAuthResponse,
   RespondToAuthChallengeRequest,
@@ -21,9 +23,11 @@ export {
   CognitoClient,
   HashUtils,
   AmzTarget,
+  AuthFlow,
   ChangePasswordParams,
   ChangePasswordResponse,
   InitiateAuthParams,
+  RefreshTokenParams,
   InitiateAuthRequest,
   InitiateAuthResponse,
   RespondToAuthChallengeRequest,

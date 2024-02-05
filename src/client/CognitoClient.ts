@@ -54,6 +54,7 @@ export class CognitoClient {
 
   /**
    * Exchange a refresh token for new access and id tokens
+   * @deprecated Use AwsSrpClient.AuthenticateUserWithRefreshToken instead
    * @param domain Cognito Auth Domain
    * @param refreshToken Valid Refresh Token
    * @returns Object with new Access-/Id Tokens, object with error message otherwise

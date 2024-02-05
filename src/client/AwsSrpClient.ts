@@ -9,6 +9,8 @@ import {
   InitiateAuthResponse,
   PasswordVerifierChallengeResponse,
   NewPasswordChallengeReponse,
+  RefreshTokenParams,
+  AuthFlow,
 } from './Types';
 import CryptoJS from 'crypto-js';
 import bigInt, { BigInteger } from 'big-integer';
@@ -151,7 +153,7 @@ export class AwsSrpClient {
       };
 
       const authRequest: InitiateAuthRequest = {
-        AuthFlow: 'USER_SRP_AUTH',
+        AuthFlow: AuthFlow.UserSrpAuth,
         ClientId: this.ClientId,
         AuthParameters: authParams,
       };
@@ -213,6 +215,65 @@ export class AwsSrpClient {
         NewPasswordRequired: false,
         Error: err,
       };
+    }
+  }
+
+  /**
+   * Authenticate a user via a refresh token.
+   * 
+   * This method generates new Id-/Access-Token.
+   * 
+   * @param refreshToken A valid refresh token
+   * @returns An object with Id-/Access-/Refresh tokens on success, an error object on failure
+   */
+  public async AuthenticateUserWithRefreshToken(refreshToken: string): Promise<PasswordVerifierResult | undefined> {
+    try {
+      const cognitoUrl = `https://cognito-idp.${this.Region}.amazonaws.com`;
+
+      const authParams: RefreshTokenParams = {
+        REFRESH_TOKEN: refreshToken
+      }
+
+      const authRequest: InitiateAuthRequest = {
+        AuthFlow: AuthFlow.RefreshTokenAuth,
+        ClientId: this.ClientId,
+        AuthParameters: authParams
+      }
+
+      const initAuthResponse = await axios.request({
+        url: cognitoUrl,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': AmzTarget.InitiateAuth },
+        data: JSON.stringify(authRequest)
+      });
+
+      if (initAuthResponse) {
+        const verifierResult: PasswordVerifierResult = {
+          Success: false,
+          NewPasswordRequired: false
+        };
+
+        if (initAuthResponse.data.AuthenticationResult) {
+          verifierResult.Success = true;
+          verifierResult.AuthenticationResult = initAuthResponse.data.AuthenticationResult;
+          verifierResult.ChallengeParameters = initAuthResponse.data.ChallengeParameters;
+        } else if (
+          initAuthResponse.data.ChallengeName &&
+          initAuthResponse.data.ChallengeName === 'NEW_PASSWORD_REQUIRED'
+        ) {
+          verifierResult.Success = true;
+          verifierResult.NewPasswordRequired = true;
+          verifierResult.Session = initAuthResponse.data.Session;
+        }
+
+        return verifierResult;
+      }
+    } catch (err) {
+      return {
+        Success: false,
+        NewPasswordRequired: false,
+        Error: err
+      }
     }
   }
 

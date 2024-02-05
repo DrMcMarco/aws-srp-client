@@ -4,14 +4,24 @@ enum AmzTarget {
   ChangePassword = 'AWSCognitoIdentityProviderService.ChangePassword',
 }
 
+enum AuthFlow {
+  UserSrpAuth = 'USER_SRP_AUTH',
+  RefreshTokenAuth = 'REFRESH_TOKEN'
+}
+
 interface InitiateAuthParams {
   USERNAME: string;
   SRP_A: string;
 }
 
+interface RefreshTokenParams {
+  REFRESH_TOKEN: string;
+  SECRET_HASH?: string;
+}
+
 interface InitiateAuthRequest {
-  AuthParameters: InitiateAuthParams;
-  AuthFlow: string;
+  AuthParameters: InitiateAuthParams | RefreshTokenParams;
+  AuthFlow: AuthFlow;
   ClientId: string;
 }
 
@@ -78,7 +88,9 @@ interface ChangePasswordResponse {
 
 export {
   AmzTarget,
+  AuthFlow,
   InitiateAuthParams,
+  RefreshTokenParams,
   InitiateAuthRequest,
   PasswordVerifierChallengeParams,
   InitiateAuthResponse,
