@@ -1,13 +1,15 @@
 import axios from 'axios';
-import { AmzTarget, ChangePasswordParams, ChangePasswordResponse, PasswordVerifierResult } from './Types';
+import { AmzTarget, ChangePasswordParams, ChangePasswordResponse, ConfirmForgotPasswordParams, ConfirmForgotPasswordResponse, ForgotPasswordParams, ForgotPasswordResponse, PasswordVerifierResult } from './Types';
 
 export class CognitoClient {
   Region: string;
   ClientId: string;
+  CognitoUrl: string;
 
   constructor(region: string, clientId: string) {
     this.Region = region;
     this.ClientId = clientId;
+    this.CognitoUrl = `https://cognito-idp.${this.Region}.amazonaws.com`;
   }
 
   /**
@@ -22,8 +24,6 @@ export class CognitoClient {
     previousPassword: string,
     newPassword: string,
   ): Promise<ChangePasswordResponse> {
-    const cognitoUrl = `https://cognito-idp.${this.Region}.amazonaws.com`;
-
     const params: ChangePasswordParams = {
       AccessToken: accessToken,
       PreviousPassword: previousPassword,
@@ -31,7 +31,7 @@ export class CognitoClient {
     };
 
     const response = await axios.request({
-      url: cognitoUrl,
+      url: this.CognitoUrl,
       method: 'POST',
       headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': AmzTarget.ChangePassword },
       data: JSON.stringify(params),
@@ -43,52 +43,59 @@ export class CognitoClient {
     };
   }
 
+  async ForgotPassword(
+    username: string
+  ): Promise<ForgotPasswordResponse> {
+    const params: ForgotPasswordParams = {
+      ClientId: this.ClientId,
+      Username: username
+    }
+
+    const response = await axios.request({
+      url: this.CognitoUrl,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': AmzTarget.ForgotPassword },
+      data: JSON.stringify(params)
+    });
+
+    return {
+      CodeDeliveryDetails: response.data.CodeDeliveryDetails ? response.data.CodeDeliveryDetails : {},
+      Error: !response.data.CodeDeliveryDetails ? response.data : {}
+    }
+  }
+
+  async ConfirmForgotPassword(
+    username: string,
+    code: string,
+    newPassword: string
+  ): Promise<ConfirmForgotPasswordResponse> {
+    const params: ConfirmForgotPasswordParams = {
+      ClientId: this.ClientId,
+      ConfirmationCode: code,
+      Username: username,
+      Password: newPassword
+    }
+
+    const response = await axios.request({
+      url: this.CognitoUrl,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': AmzTarget.ConfirmForgotPassword },
+      data: JSON.stringify(params)
+    });
+
+    return {
+      Success: response.status === 200,
+      Error: JSON.stringify(response.data)
+    }
+  }
+
   /**
    * Build a Cognito Auth Domain with your chosen prefix and region.
+   * @deprecated Not needed anymore, will be removed in the next version.
    * @param prefix Chosen URL prefix
    * @returns Your Cognito Auth Domain
    */
   CognitoDomain(prefix: string) {
     return `https://${prefix}.auth.${this.Region}.amazoncognito.com`;
-  }
-
-  /**
-   * Exchange a refresh token for new access and id tokens
-   * @deprecated Use AwsSrpClient.AuthenticateUserWithRefreshToken instead
-   * @param domain Cognito Auth Domain
-   * @param refreshToken Valid Refresh Token
-   * @returns Object with new Access-/Id Tokens, object with error message otherwise
-   */
-  async GetAccessFromRefreshToken(domain: string, refreshToken: string): Promise<PasswordVerifierResult> {
-    try {
-      const response = await axios.request({
-        url: `${domain}/oauth2/token`,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        data: new URLSearchParams({
-          grant_type: 'refresh_token',
-          client_id: this.ClientId,
-          refresh_token: refreshToken,
-        }).toString(),
-      });
-
-      return {
-        Success: true,
-        NewPasswordRequired: false,
-        AuthenticationResult: {
-          AccessToken: response.data.access_token,
-          IdToken: response.data.id_token,
-          RefreshToken: refreshToken,
-          ExpiresIn: response.data.expires_in,
-          TokenType: response.data.token_type,
-        },
-      };
-    } catch (err) {
-      return {
-        Success: false,
-        NewPasswordRequired: false,
-        Error: err,
-      };
-    }
   }
 }

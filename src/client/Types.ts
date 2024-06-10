@@ -2,6 +2,8 @@ enum AmzTarget {
   InitiateAuth = 'AWSCognitoIdentityProviderService.InitiateAuth',
   AuthChallenge = 'AWSCognitoIdentityProviderService.RespondToAuthChallenge',
   ChangePassword = 'AWSCognitoIdentityProviderService.ChangePassword',
+  ForgotPassword = 'AWSCognitoIdentityProviderService.ForgotPassword',
+  ConfirmForgotPassword = 'AWSCognitoIdentityProviderService.ConfirmForgotPassword'
 }
 
 enum AuthFlow {
@@ -86,6 +88,37 @@ interface ChangePasswordResponse {
   Error?: string;
 }
 
+interface ForgotPasswordParams {
+  ClientId: string,
+  SecretHash?: string,
+  Username: string
+}
+
+interface ForgotPasswordResponse {
+  CodeDeliveryDetails?: {
+    AttributeName: string;
+    DeliveryMedium: string;
+    Destination: string;
+  };
+  Error?: {
+    __type: string;
+    message: string;
+  }
+}
+
+interface ConfirmForgotPasswordParams {
+  ClientId: string;
+  SecretHash?: string;
+  Username: string;
+  ConfirmationCode: string;
+  Password: string
+}
+
+interface ConfirmForgotPasswordResponse {
+  Success: boolean;
+  Error?: any
+}
+
 export {
   AmzTarget,
   AuthFlow,
@@ -101,4 +134,8 @@ export {
   NewPasswordChallengeReponse,
   ChangePasswordParams,
   ChangePasswordResponse,
+  ForgotPasswordParams,
+  ForgotPasswordResponse,
+  ConfirmForgotPasswordParams,
+  ConfirmForgotPasswordResponse
 };
