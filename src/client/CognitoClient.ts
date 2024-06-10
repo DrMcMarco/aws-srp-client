@@ -1,5 +1,14 @@
 import axios from 'axios';
-import { AmzTarget, ChangePasswordParams, ChangePasswordResponse, ConfirmForgotPasswordParams, ConfirmForgotPasswordResponse, ForgotPasswordParams, ForgotPasswordResponse, PasswordVerifierResult } from './Types';
+import {
+  AmzTarget,
+  ChangePasswordParams,
+  ChangePasswordResponse,
+  ConfirmForgotPasswordParams,
+  ConfirmForgotPasswordResponse,
+  ForgotPasswordParams,
+  ForgotPasswordResponse,
+  PasswordVerifierResult,
+} from './Types';
 
 export class CognitoClient {
   Region: string;
@@ -43,50 +52,48 @@ export class CognitoClient {
     };
   }
 
-  async ForgotPassword(
-    username: string
-  ): Promise<ForgotPasswordResponse> {
+  async ForgotPassword(username: string): Promise<ForgotPasswordResponse> {
     const params: ForgotPasswordParams = {
       ClientId: this.ClientId,
-      Username: username
-    }
+      Username: username,
+    };
 
     const response = await axios.request({
       url: this.CognitoUrl,
       method: 'POST',
       headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': AmzTarget.ForgotPassword },
-      data: JSON.stringify(params)
+      data: JSON.stringify(params),
     });
 
     return {
       CodeDeliveryDetails: response.data.CodeDeliveryDetails ? response.data.CodeDeliveryDetails : {},
-      Error: !response.data.CodeDeliveryDetails ? response.data : {}
-    }
+      Error: !response.data.CodeDeliveryDetails ? response.data : {},
+    };
   }
 
   async ConfirmForgotPassword(
     username: string,
     code: string,
-    newPassword: string
+    newPassword: string,
   ): Promise<ConfirmForgotPasswordResponse> {
     const params: ConfirmForgotPasswordParams = {
       ClientId: this.ClientId,
       ConfirmationCode: code,
       Username: username,
-      Password: newPassword
-    }
+      Password: newPassword,
+    };
 
     const response = await axios.request({
       url: this.CognitoUrl,
       method: 'POST',
       headers: { 'Content-Type': 'application/x-amz-json-1.1', 'X-Amz-Target': AmzTarget.ConfirmForgotPassword },
-      data: JSON.stringify(params)
+      data: JSON.stringify(params),
     });
 
     return {
       Success: response.status === 200,
-      Error: JSON.stringify(response.data)
-    }
+      Error: JSON.stringify(response.data),
+    };
   }
 
   /**
