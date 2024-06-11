@@ -52,10 +52,11 @@ export class CognitoClient {
     };
   }
 
-  async ForgotPassword(username: string): Promise<ForgotPasswordResponse> {
+  async ForgotPassword(username: string, metadata: Record<string, string>): Promise<ForgotPasswordResponse> {
     const params: ForgotPasswordParams = {
       ClientId: this.ClientId,
       Username: username,
+      ClientMetadata: metadata
     };
 
     const response = await axios.request({
