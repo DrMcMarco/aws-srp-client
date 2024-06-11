@@ -92,7 +92,7 @@ interface ForgotPasswordParams {
   ClientId: string;
   SecretHash?: string;
   Username: string;
-  ClientMetadata?: Record<string, string>
+  ClientMetadata?: Record<string, string>;
 }
 
 interface ForgotPasswordResponse {

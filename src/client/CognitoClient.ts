@@ -56,7 +56,7 @@ export class CognitoClient {
     const params: ForgotPasswordParams = {
       ClientId: this.ClientId,
       Username: username,
-      ClientMetadata: metadata
+      ClientMetadata: metadata,
     };
 
     const response = await axios.request({
